@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Biology MCQ Exam - Respiratory System</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f7fa;--card:#fff;--tx:#1d2733;--mu:#667085;--ac:#2563eb;--ok:#16a34a;--no:#dc2626;--bd:#dde3ea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1720;--card:#18222e;--tx:#e8edf3;--mu:#98a4b3;--ac:#60a5fa;--ok:#4ade80;--no:#f87171;--bd:#2a3746}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.w{max-width:720px;margin:0 auto;padding:16px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
+h1{font-size:22px;margin:0 0 6px}p{color:var(--mu);margin:4px 0}
+input[type=text]{width:100%;padding:12px;border:1px solid var(--bd);border-radius:8px;font-size:16px;background:var(--bg);color:var(--tx);margin:10px 0}
+button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:12px 20px;font-size:16px;cursor:pointer}
+button.s{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;display:flex;justify-content:space-between;font-weight:600;z-index:5}
+.q{font-weight:600;margin-bottom:8px}
+.o{display:block;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;margin:6px 0;cursor:pointer}
+.o:has(input:checked){border-color:var(--ac);background:rgba(37,99,235,.1)}
+.o input{margin-right:8px}
+.ok{border-color:var(--ok)!important;background:rgba(22,163,74,.15)!important}
+.no{border-color:var(--no)!important;background:rgba(220,38,38,.15)!important}
+.big{font-size:40px;font-weight:700;color:var(--ac)}
+.hide{display:none}
+</style></head><body><div class="w">
+
+<div id="start" class="c">
+<h1>Respiratory System - MCQ Exam</h1>
+<p>Biology | 30 Questions | 30 Minutes | Each question 1 mark</p>
+<p>Enter your name and roll, then click Start Exam. The exam will be submitted automatically when time runs out.</p>
+<input type="text" id="nm" placeholder="Your name / roll">
+<button onclick="go()">Start Exam</button>
+</div>
+
+<div id="exam" class="hide">
+<div class="bar"><span id="prog">0/30 answered</span><span id="tm">30:00</span></div>
+<div id="qs"></div>
+<button onclick="fin()">Submit Exam</button>
+</div>
+
+<div id="res" class="hide">
+<div class="c" style="text-align:center"><p id="who"></p><div class="big" id="sc"></div><p id="pc"></p>
+<button class="s" onclick="window.print()">Print / Save result</button></div>
+<h2 style="font-size:18px">Answer Review</h2><div id="rv"></div>
+</div>
+</div>
+<script>
+// [question, [options], correct index]
+const IMG1=`<svg viewBox="0 0 260 220" style="max-width:260px;width:100%;display:block;margin:8px auto;color:var(--tx)" fill="none" stroke="currentColor" stroke-width="2"><rect x="118" y="8" width="24" height="22" rx="5"/><rect x="123" y="30" width="14" height="82"/><path d="M123 44h14M123 58h14M123 72h14M123 86h14M123 100h14"/><path d="M130 112L95 140M130 112L165 140"/><ellipse cx="72" cy="150" rx="42" ry="58" fill="currentColor" fill-opacity=".12"/><ellipse cx="188" cy="150" rx="42" ry="58" fill="currentColor" fill-opacity=".12"/><path d="M142 19L180 19M137 70L180 70M50 112L24 90" stroke-width="1.5"/><g fill="currentColor" stroke="none" font-size="18" font-weight="700"><text x="186" y="25">A</text><text x="186" y="76">B</text><text x="8" y="86">C</text></g></svg>`;
+const IMG2=`<svg viewBox="0 0 260 170" style="max-width:260px;width:100%;display:block;margin:8px auto;color:var(--tx)" fill="none" stroke="currentColor" stroke-width="2"><path d="M70 125Q90 25 190 45Q170 135 70 125Z" fill="#16a34a" fill-opacity=".35"/><path d="M70 125L170 62"/><path d="M15 80H62"/><polygon points="68,80 56,74 56,86" fill="currentColor"/><path d="M190 95H238"/><polygon points="246,95 234,89 234,101" fill="currentColor"/><g fill="currentColor" stroke="none" font-size="16" font-weight="700"><text x="18" y="70">O₂</text><text x="200" y="88">CO₂</text><text x="85" y="158">Night time</text></g></svg>`;
+const IMG3=`<svg viewBox="0 0 260 200" style="max-width:260px;width:100%;display:block;margin:8px auto;color:var(--tx)" fill="none" stroke="currentColor" stroke-width="2"><rect x="123" y="5" width="14" height="62"/><path d="M130 67L95 92M130 67L165 92"/><ellipse cx="72" cy="130" rx="46" ry="62" fill="currentColor" fill-opacity=".12"/><ellipse cx="188" cy="130" rx="46" ry="62" fill="currentColor" fill-opacity=".12"/><path d="M28 112L112 102M30 150L114 160M148 135L230 118" stroke-width="1.5"/><path d="M30 40L45 85M232 40L218 85" stroke-width="1.5"/><g fill="currentColor" stroke="none" font-size="18" font-weight="700"><text x="12" y="36">P</text><text x="228" y="36">Q</text></g></svg>`;
+const IMG4=`<svg viewBox="0 0 260 160" style="max-width:260px;width:100%;display:block;margin:8px auto;color:var(--tx)" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 80H100M100 80L118 50M100 80L112 90M100 80L118 118"/><g fill="currentColor" fill-opacity=".15"><circle cx="130" cy="42" r="18"/><circle cx="162" cy="38" r="18"/><circle cx="140" cy="76" r="18"/><circle cx="176" cy="72" r="18"/><circle cx="130" cy="110" r="18"/><circle cx="164" cy="108" r="18"/></g><path d="M214 30L184 52" stroke-width="1.5"/><g fill="currentColor" stroke="none" font-size="18" font-weight="700"><text x="216" y="28">X</text></g></svg>`;
+const IMG5=`<svg viewBox="0 0 260 195" style="max-width:260px;width:100%;display:block;margin:8px auto;color:var(--tx)" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="130" cy="82" rx="85" ry="68" stroke-dasharray="6 4"/><ellipse cx="98" cy="82" rx="32" ry="48" fill="currentColor" fill-opacity=".12"/><ellipse cx="162" cy="82" rx="32" ry="48" fill="currentColor" fill-opacity=".12"/><path d="M45 152H215" stroke-width="4"/><path d="M130 158V180"/><polygon points="130,188 124,176 136,176" fill="currentColor"/><path d="M38 82H18"/><polygon points="10,82 22,76 22,88" fill="currentColor"/><path d="M222 82H242"/><polygon points="250,82 238,76 238,88" fill="currentColor"/></svg>`;
+const D=[
+["Which of the following causes bronchitis?",["Virus","Bacteria","Fungus","Amoeba"],1],
+["Which help(s) in the exchange of gases in plants?\ni. stomata  ii. lenticels  iii. root hairs",["i and ii","i and iii","ii and iii","i, ii and iii"],0],
+["What is the name of the lid-like structure, shaped like a tongue, situated above the larynx?",["Trachea","Pharynx","Larynx","Epiglottis"],3],
+["Which organ is common in both the respiratory and digestive systems of the human body?",["Larynx","Pharynx","Bronchus","Trachea"],1],
+["Trachea is a part of which system?",["Nervous system","Respiratory system","Excretory system","Digestive system"],1],
+["Look at the diagram of the human respiratory system. Which labeled part is supported by C-shaped rings of cartilage?",["A","B","C","None of these"],1,IMG1],
+["Evening sweat, rise of fever and coughing sometimes with blood are symptoms of which disease?",["Tuberculosis","Pneumonia","Bronchitis","Asthma"],0],
+["A whizzing sound in the chest occurs in which disease?",["Asthma","Pneumonia","Bronchitis","Tuberculosis"],0],
+["Inflammation of the lining of the bronchi (bronchial tubes) is called -",["Asthma","Bronchitis","Pneumonia","Tuberculosis"],1],
+["Which test is performed on the skin to detect tuberculosis?",["MT test","Blood sugar test","Urine test","ECG"],0],
+["The germ of tuberculosis is -",["Pneumococcus","Plasmodium","Mycobacterium tuberculosis","Vibrio cholerae"],2],
+["Pneumonia is caused by the attack of -",["Pneumococcus bacteria","Plasmodium","Entamoeba","Papilloma virus"],0],
+["The arrows in the figure show the movement of the diaphragm and ribs. Which process is shown?",["Inhalation","Exhalation","Photosynthesis","Transpiration"],0,IMG5],
+["The figure shows the gas exchange of a leaf at night. Which process is taking place?",["Photosynthesis","Respiration","Transpiration","Osmosis"],1,IMG2],
+["The outer layer of the lung is covered by -",["Pericardium","Pleura","Peritoneum","Myocardium"],1],
+["Into how many lobes is the left lung of a human divided?",["2","3","4","5"],0],
+["How many lobes does the lung labeled P have?",["2","3","4","5"],1,IMG3],
+["In which form is carbon dioxide mainly transported in the blood?",["Carbohaemoglobin","Bicarbonate","Oxyhaemoglobin","Calcium carbonate"],1],
+["Oxygen is carried in the blood mainly by -",["Plasma","White blood cells","Haemoglobin in RBC","Platelets"],2],
+["By which process does oxygen enter the blood from the lungs?",["Osmosis","Diffusion","Transpiration","Imbibition"],1],
+["At night in plants -\ni. carbon dioxide is produced\nii. oxygen is produced\niii. respiration continues\nWhich one is correct?",["i and ii","ii and iii","i and iii","i, ii and iii"],2],
+["Lenticel is found in -",["Young leaves","The bark of the mature stem","Root hairs","Flowers"],1],
+["The time during which respiration occurs in plants is -",["Only day","Only night","Evening only","24 hours a day and night"],3],
+["Location of the larynx -\ni. below the pharynx\nii. above the trachea\niii. in front of the oesophagus\nWhich one is correct?",["i and ii","i and iii","ii and iii","i, ii and iii"],3],
+["What is the name of the grape-like structure labeled X, where gas exchange takes place?",["Bronchus","Alveoli","Trachea","Pleura"],1,IMG4],
+["The trachea is supported by -",["Rings of bones","Smooth muscle","Incomplete rings of cartilage","Mucous membrane only"],2],
+["Which type of tissue is found lining the trachea?",["Squamous","Simple columnar","Pseudostratified ciliated","Stratified"],2],
+["During an asthma attack -\ni. lips turn blue\nii. veins of the neck swell\niii. high fever is always present\nWhich one is correct?",["i and ii","i and iii","ii and iii","i, ii and iii"],0],
+["Which of the following diseases is NOT contagious (not caused by germs)?",["Tuberculosis","Pneumonia","Asthma","Cholera"],2],
+["What is the main cause of lung cancer?",["Smoking","Drinking milk","Regular exercise","Eating fruit"],0]
+];
+let Q=[],T=1800,iv,name="";
+function sh(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function go(){
+ name=document.getElementById('nm').value.trim();
+ if(!name){alert('Please enter your name');return}
+ Q=sh(D.map(d=>({q:d[0],img:d[3]||'',o:sh(d[1].map((t,i)=>({t,c:i===d[2]}))),a:null})));
+ const box=document.getElementById('qs');
+ box.innerHTML=Q.map((x,i)=>`<div class="c"><div class="q">${i+1}. ${x.q.replace(/\n/g,'<br>')}</div>${x.img}`+
+  x.o.map((p,j)=>`<label class="o"><input type="radio" name="q${i}" value="${j}" onchange="pick(${i},${j})">${p.t}</label>`).join('')+`</div>`).join('');
+ show('exam');tick();iv=setInterval(tick,1000);
+}
+function pick(i,j){Q[i].a=j;document.getElementById('prog').textContent=Q.filter(x=>x.a!==null).length+'/30 answered'}
+function tick(){
+ const m=Math.floor(T/60),s=T%60;
+ document.getElementById('tm').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+ if(T--<=0)fin(true);
+}
+function show(id){['start','exam','res'].forEach(x=>document.getElementById(x).classList.toggle('hide',x!==id));window.scrollTo(0,0)}
+function fin(auto){
+ const left=Q.filter(x=>x.a===null).length;
+ if(!auto&&left&&!confirm(left+' question(s) unanswered. Submit anyway?'))return;
+ clearInterval(iv);
+ const n=Q.filter(x=>x.a!==null&&x.o[x.a].c).length;
+ document.getElementById('who').textContent=name;
+ document.getElementById('sc').textContent=n+' / 30';
+ document.getElementById('pc').textContent=Math.round(n/30*100)+'%';
+ document.getElementById('rv').innerHTML=Q.map((x,i)=>`<div class="c"><div class="q">${i+1}. ${x.q.replace(/\n/g,'<br>')}</div>${x.img}`+
+  x.o.map((p,j)=>`<div class="o ${p.c?'ok':(x.a===j?'no':'')}">${p.t}${p.c?' ✔':''}${x.a===j&&!p.c?' ✘ (your answer)':''}</div>`).join('')+
+  (x.a===null?'<p>Not answered</p>':'')+`</div>`).join('');
+ show('res');
+}
+</script></body></html>
